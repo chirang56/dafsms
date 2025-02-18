@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Plus, Edit2, Trash2 } from 'lucide-react';
-import supabase from '../utils/supabase';
+import { fetchProducts, addProduct } from '../services/supabaseService';
 import ProductModal from '../components/ProductModal';
 
 function Products() {
@@ -10,8 +10,7 @@ function Products() {
   useEffect(() => {
     const getProducts = async () => {
       try {
-        const { data, error } = await supabase.from('products').select('*');
-        if (error) throw error;
+        const data = await fetchProducts();
         setProducts(data);
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -23,8 +22,7 @@ function Products() {
 
   const handleAddProduct = async (product) => {
     try {
-      const { data, error } = await supabase.from('products').insert([product]);
-      if (error) throw error;
+      const data = await addProduct(product);
       setProducts([...products, ...data]);
     } catch (error) {
       console.error('Error adding product:', error);
