@@ -1,52 +1,80 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { UserPlus, Mail, Phone, MapPin } from 'lucide-react';
+import { fetchCustomers, addCustomer } from '../services/supabaseService';
 
 function Customers() {
-  const customers = [
-    {
-      id: 1,
-      name: 'John Doe',
-      email: 'john@example.com',
-      phone: '+1 234-567-8900',
-      location: 'New York, USA',
-      orders: 12,
-      totalSpent: '$1,234',
-      lastOrder: '2024-02-15',
-      status: 'Active',
-    },
-    {
-      id: 2,
-      name: 'Jane Smith',
-      email: 'jane@example.com',
-      phone: '+1 234-567-8901',
-      location: 'Los Angeles, USA',
-      orders: 8,
-      totalSpent: '$876',
-      lastOrder: '2024-02-14',
-      status: 'Active',
-    },
-    {
-      id: 3,
-      name: 'Mike Johnson',
-      email: 'mike@example.com',
-      phone: '+1 234-567-8902',
-      location: 'Chicago, USA',
-      orders: 15,
-      totalSpent: '$2,345',
-      lastOrder: '2024-02-13',
-      status: 'Inactive',
-    },
-  ];
+  const [customers, setCustomers] = useState([]);
+  const [newCustomer, setNewCustomer] = useState({ name: '', email: '', phone: '', location: '', status: 'Active' });
+
+  useEffect(() => {
+    const getCustomers = async () => {
+      try {
+        const data = await fetchCustomers();
+        setCustomers(data);
+      } catch (error) {
+        console.error('Error fetching customers:', error);
+      }
+    };
+
+    getCustomers();
+  }, []);
+
+  const handleAddCustomer = async () => {
+    try {
+      const addedCustomer = await addCustomer(newCustomer);
+      setCustomers([...customers, ...addedCustomer]);
+      setNewCustomer({ name: '', email: '', phone: '', location: '', status: 'Active' });
+    } catch (error) {
+      console.error('Error adding customer:', error);
+    }
+  };
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-800">Customers</h1>
-        <button className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700">
+        <button
+          onClick={handleAddCustomer}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700"
+        >
           <UserPlus className="w-5 h-5" />
           Add Customer
         </button>
+      </div>
+
+      {/* Add Customer Form */}
+      <div className="bg-white p-4 rounded-lg shadow-sm border">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input
+            type="text"
+            placeholder="Customer Name"
+            value={newCustomer.name}
+            onChange={(e) => setNewCustomer({ ...newCustomer, name: e.target.value })}
+            className="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <input
+            type="email"
+            placeholder="Email"
+            value={newCustomer.email}
+            onChange={(e) => setNewCustomer({ ...newCustomer, email: e.target.value })}
+            className="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <input
+            type="text"
+            placeholder="Phone"
+            value={newCustomer.phone}
+            onChange={(e) => setNewCustomer({ ...newCustomer, phone: e.target.value })}
+            className="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <input
+            type="text"
+            placeholder="Location"
+            value={newCustomer.location}
+            onChange={(e) => setNewCustomer({ ...newCustomer, location: e.target.value })}
+            className="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
       </div>
 
       {/* Customer Cards */}
@@ -83,15 +111,15 @@ function Customers() {
             <div className="mt-4 pt-4 border-t grid grid-cols-3 gap-4">
               <div>
                 <p className="text-sm text-gray-500">Orders</p>
-                <p className="font-semibold">{customer.orders}</p>
+                <p className="font-semibold">{customer.orders || 0}</p>
               </div>
               <div>
                 <p className="text-sm text-gray-500">Total Spent</p>
-                <p className="font-semibold">{customer.totalSpent}</p>
+                <p className="font-semibold">{customer.totalSpent || '$0.00'}</p>
               </div>
               <div>
                 <p className="text-sm text-gray-500">Last Order</p>
-                <p className="font-semibold">{customer.lastOrder}</p>
+                <p className="font-semibold">{customer.lastOrder || 'N/A'}</p>
               </div>
             </div>
           </div>
