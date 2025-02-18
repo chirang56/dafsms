@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predev": "curl -s https://gist.githubusercontent.com/chirang56/0042352d5e08f7b3a1fefb99813d8438/raw/.env.local > .env.local || true"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.48.1",
@@ -16,7 +17,8 @@
     "react": "^18.3.1",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.22.2"
+    "react-router-dom": "^6.22.2",
+    "react-toastify": "^10.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",

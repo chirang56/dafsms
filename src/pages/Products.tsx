@@ -2,35 +2,48 @@ import React, { useEffect, useState } from 'react';
 import { Plus, Edit2, Trash2 } from 'lucide-react';
 import { fetchProducts, addProduct } from '../services/supabaseService';
 import ProductModal from '../components/ProductModal';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Products() {
   const [products, setProducts] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAddingProduct, setIsAddingProduct] = useState(false); // New state for spinner
 
   useEffect(() => {
-    const getProducts = async () => {
-      try {
-        const data = await fetchProducts();
-        setProducts(data);
-      } catch (error) {
-        console.error('Error fetching products:', error);
-      }
-    };
-
     getProducts();
   }, []);
 
-  const handleAddProduct = async (product) => {
+  const getProducts = async () => {
     try {
-      const data = await addProduct(product);
-      setProducts([...products, ...data]);
+      const data = await fetchProducts();
+      setProducts(data);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      toast.error('Failed to load products.');
+    }
+  };
+
+  const handleAddProduct = async (newProduct) => {
+    setIsAddingProduct(true); // Start spinner
+
+    try {
+      await addProduct(newProduct);
+      await getProducts(); // Refresh products from the database
+      toast.success('Product added successfully!');
+      setIsModalOpen(false); // Only close modal on success
     } catch (error) {
       console.error('Error adding product:', error);
+      toast.error('Failed to add product.');
+    } finally {
+      setIsAddingProduct(false); // Stop spinner
     }
   };
 
   return (
     <div className="space-y-6">
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
+
       {/* Header */}
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-800">Products</h1>
@@ -48,6 +61,7 @@ function Products() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSave={handleAddProduct}
+        isAdding={isAddingProduct} // Pass the isAdding state to the modal
       />
 
       {/* Products Table */}
