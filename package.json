@@ -7,8 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "predev": "curl -s https://gist.githubusercontent.com/chirang56/0042352d5e08f7b3a1fefb99813d8438/raw/.env.local > .env.local || true"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.48.1",
