@@ -6,7 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function Products() {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<any[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAddingProduct, setIsAddingProduct] = useState(false); // New state for spinner
 
@@ -24,7 +24,7 @@ function Products() {
     }
   };
 
-  const handleAddProduct = async (newProduct) => {
+  const handleAddProduct = async (newProduct: any) => {
     setIsAddingProduct(true); // Start spinner
 
     try {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
@@ -6,8 +6,13 @@ import Products from './pages/Products';
 import Customers from './pages/Customers';
 import Settings from './pages/Settings';
 import Invoice from './pages/Invoice';
+import { createCustomersTable } from './services/supabaseService';
 
 function App() {
+  useEffect(() => {
+    createCustomersTable();
+  }, []);
+
   return (
     <Router>
       <Layout>
