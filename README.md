@@ -1,3 +1,4 @@
-# dafsms
+This is the demo version for our project Dairy Farm Shop Management System.
 
-[Edit in StackBlitz next generation editor ⚡️](https://stackblitz.com/~/github.com/chirang56/dafsms)
+This admin dashboard is the created using react.js with tailwind css for styling,
+database is maintained with supabase.
